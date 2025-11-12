@@ -27,6 +27,7 @@ jobs:
 
     - name: OpenVPN
       run: |
+        cd TunnelBear
         date
         bash -c "$IP_COMMAND"
         echo
