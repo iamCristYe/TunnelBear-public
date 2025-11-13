@@ -1,0 +1,99 @@
+name: check_ALL_Chatham
+
+on:
+  schedule:
+    - cron: '45 9 * * *'
+  # push:
+  #   branches:
+  #     - master
+  workflow_dispatch:
+
+jobs:
+  check_ALL_Chatham:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clone private repo
+      env:
+        PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
+      run: |
+        git clone https://x-access-token:${PAT_GITHUB}@github.com/iamCristYE/TunnelBear.git
+        cd TunnelBear
+        sudo apt update
+        sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
+        pip install requests yt-dlp
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' # Specify the Python version you need
+
+    - name: Wait
+      run: |
+        # Target timezone
+        TZ="Pacific/Chatham"
+        echo $(TZ=$TZ date +%H:%M)
+        
+        # Loop until the time in Pacific/Chatham is 23:58
+        while true; do
+            current_time=$(TZ=$TZ date +%H:%M)
+            if [[ "$current_time" == "23:58" ]]; then
+                echo "Reached 23:58 in Pacific/Chatham!"
+                break
+            fi
+            # Sleep for 30 seconds to avoid busy looping
+            sleep 30
+        done
+
+    - name: OpenVPN
+      run: |
+        cd TunnelBear
+        date
+        bash -c "$IP_COMMAND"
+        date
+        sudo echo -e "${TB_USER}\n${TB_PASS}" > TunnelBear.auth
+        sudo openvpn --config TunnelBear_New_Zealand.ovpn --auth-user-pass TunnelBear.auth --daemon
+        sleep 60
+        date
+        bash -c "$IP_COMMAND"
+        echo
+        date
+      env:
+        IP_COMMAND: ${{ secrets.IP_COMMAND }}
+        TB_USER: ${{ secrets.TB_USER }}
+        TB_PASS: ${{ secrets.TB_PASS }}
+
+    
+    - name: Run Python script
+      run: |
+        cd TunnelBear
+        date
+        python check-all.py
+        date
+      env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          CHANNEL_URL: ${{ secrets.CHANNEL_URL }}
+          COOKIE: ${{ secrets.COOKIE }}
+
+    - name: Stop OpenVPN
+      run: |
+        date
+        bash -c "$IP_COMMAND"
+        echo
+        sudo killall openvpn || date
+        date
+      env:
+        IP_COMMAND: ${{ secrets.IP_COMMAND }}
+
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+      run: |
+        cd TunnelBear
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git add sent_log.json
+        git commit -m "Update sent_log.json [$(date -u)]" || echo "No changes to commit"
+        git push origin main
+        
