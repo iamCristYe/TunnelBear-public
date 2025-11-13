@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' # Specify the Python version you need
+
     - name: Clone private repo
       env:
         PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
@@ -22,11 +27,6 @@ jobs:
         sudo apt update
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
         pip install requests yt-dlp
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10' # Specify the Python version you need
 
     - name: OpenVPN
       run: |

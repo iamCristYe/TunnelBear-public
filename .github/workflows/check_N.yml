@@ -13,17 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' # Specify the Python version you need
+
     - name: Clone private repo
       env:
         PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
       run: |
         git clone https://x-access-token:${PAT_GITHUB}@github.com/iamCristYE/TunnelBear.git
         cd TunnelBear
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10' # Specify the Python version you need
+        sudo apt update
+        sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
+        pip install requests yt-dlp
 
     - name: OpenVPN
       run: |
