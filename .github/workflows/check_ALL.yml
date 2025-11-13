@@ -58,6 +58,17 @@ jobs:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           CHANNEL_URL: ${{ secrets.CHANNEL_URL }}
           COOKIE: ${{ secrets.COOKIE }}
+          
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+      run: |
+        cd TunnelBear
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git add sent_log.json
+        git commit -m "Update sent_log.json [$(date -u)]" || echo "No changes to commit"
+        git push origin main
 
     - name: Stop OpenVPN
       run: |
@@ -69,14 +80,4 @@ jobs:
       env:
         IP_COMMAND: ${{ secrets.IP_COMMAND }}
 
-    - name: Commit and push changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
-      run: |
-        cd TunnelBear
-        git config user.name "GitHub Actions Bot"
-        git config user.email "<>"
-        git add sent_log.json
-        git commit -m "Update sent_log.json [$(date -u)]" || echo "No changes to commit"
-        git push origin main
         
