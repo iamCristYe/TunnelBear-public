@@ -1,0 +1,52 @@
+name: check_ALL_Populate
+
+on:
+  # schedule:
+  #   - cron: '45 9 * * *'
+  # push:
+  #   branches:
+  #     - master
+  workflow_dispatch:
+
+jobs:
+  check_ALL_Populate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' # Specify the Python version you need
+
+    - name: Clone private repo
+      env:
+        PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
+      run: |
+        git clone https://x-access-token:${PAT_GITHUB}@github.com/iamCristYE/TunnelBear.git
+        cd TunnelBear
+        sudo apt update
+        sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
+        pip install requests yt-dlp
+  
+    - name: Run Python script
+      run: |
+        cd TunnelBear
+        date
+        python check-all.py
+        date
+      env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          CHANNEL_URL: ${{ secrets.CHANNEL_URL }}
+          COOKIE: ${{ secrets.COOKIE }}
+          
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+      run: |
+        cd TunnelBear
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git add sent_log.json
+        git commit -m "Update sent_log.json [$(date -u)]" || echo "No changes to commit"
+        git push origin main
