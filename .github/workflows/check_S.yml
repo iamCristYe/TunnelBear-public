@@ -37,10 +37,6 @@ jobs:
         echo
         echo "$TEST"
         date
-        sudo apt update
-        curl -fsSL https://deno.land/install.sh | sh
-        sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
-        pip install requests yt-dlp yt-dlp-ejs
         sudo echo -e "${TB_USER}\n${TB_PASS}" > TunnelBear.auth
         sudo openvpn --config TunnelBear_New_Zealand.ovpn --auth-user-pass TunnelBear.auth --daemon
         sleep 60
