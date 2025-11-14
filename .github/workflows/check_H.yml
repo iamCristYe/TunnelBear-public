@@ -25,6 +25,7 @@ jobs:
         git clone https://x-access-token:${PAT_GITHUB}@github.com/iamCristYE/TunnelBear.git
         cd TunnelBear
         sudo apt update
+        curl -fsSL https://deno.land/install.sh | sh
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
         pip install requests yt-dlp yt-dlp-ejs
 
@@ -37,6 +38,7 @@ jobs:
         echo "$TEST"
         date
         sudo apt update
+curl -fsSL https://deno.land/install.sh | sh
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
         pip install requests yt-dlp yt-dlp-ejs
         sudo echo -e "${TB_USER}\n${TB_PASS}" > TunnelBear.auth
