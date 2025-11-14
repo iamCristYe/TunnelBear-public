@@ -26,6 +26,7 @@ jobs:
         cd TunnelBear
         sudo apt update
         curl -fsSL https://deno.land/install.sh | sh
+        echo "$HOME/.deno/bin" >> $GITHUB_PATH
         deno --version
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
         pip install requests
