@@ -25,9 +25,11 @@ jobs:
         git clone https://x-access-token:${PAT_GITHUB}@github.com/iamCristYE/TunnelBear.git
         cd TunnelBear
         sudo apt update
-        curl -fsSL https://deno.land/install.sh | sh
+        npm install -g deno
+        deno --version
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
-        pip install requests yt-dlp yt-dlp-ejs
+        pip install requests
+        pip install -U "yt-dlp[default]"
 
     - name: OpenVPN
       run: |
