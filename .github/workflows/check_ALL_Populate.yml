@@ -26,8 +26,9 @@ jobs:
         cd TunnelBear
         sudo apt update
         curl -fsSL https://deno.land/install.sh | sh
+        deno --version
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
-        pip install requests yt-dlp yt-dlp-ejs
+        pip install requests
         pip install -U "yt-dlp[default]"
   
     - name: Run Python script
