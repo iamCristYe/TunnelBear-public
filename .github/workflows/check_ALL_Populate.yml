@@ -28,6 +28,7 @@ jobs:
         curl -fsSL https://deno.land/install.sh | sh
         sudo apt install -y openvpn openvpn-systemd-resolved ffmpeg
         pip install requests yt-dlp yt-dlp-ejs
+        pip install -U "yt-dlp[default]"
   
     - name: Run Python script
       run: |
