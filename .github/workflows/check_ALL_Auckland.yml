@@ -54,7 +54,9 @@ jobs:
         date
         bash -c "$IP_COMMAND"
         date
-        sudo echo -e "${TB_USER}\n${TB_PASS}" > TunnelBear.auth
+        DAY_ABBR=$(date +%a | tr '[:upper:]' '[:lower:]')
+        TB_USER_MODIFIED="${TB_USER/@/-$DAY_ABBR@}"
+        bash -c "echo -e \"${TB_USER_MODIFIED}\n${TB_PASS}\" > TunnelBear.auth"
         sudo openvpn --config TunnelBear_New_Zealand.ovpn --auth-user-pass TunnelBear.auth --daemon
         sleep 60
         date
