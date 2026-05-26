@@ -40,6 +40,14 @@ jobs:
         # Loop until the time in Pacific/Chatham is 23:58
         while true; do
             current_time=$(TZ=$TZ date +%H:%M)
+            
+            current_val=$(TZ=$TZ date +%H%M)
+
+            if [ "$current_val" -le 1800 ]; then
+                break
+            fi
+
+
             if [[ "$current_time" == "23:58" ]]; then
                 echo "Reached 23:58 in Pacific/Chatham!"
                 break
